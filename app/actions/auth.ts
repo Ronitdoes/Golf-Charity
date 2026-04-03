@@ -83,13 +83,13 @@ export async function signUp(formData: FormData) {
 
   return { 
     isVerifying: true,
-    success: 'Registration initiated! Please enter the 6-digit code sent to your email.' 
+    success: 'Registration initiated! Please enter the 8-digit code sent to your email.' 
   };
 }
 
 export async function verifyEmailOTP(email: string, token: string) {
-  if (!email || !token || token.length < 6) {
-    return { error: 'Verification code must be at least 6 digits long' };
+  if (!email || !token || token.length < 8) {
+    return { error: 'Verification code must be at least 8 digits long' };
   }
 
   const supabase = createServerSupabaseClient();
