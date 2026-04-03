@@ -1,0 +1,79 @@
+'use client';
+
+// Administrative user data table with optimized spacing for high-density information displays
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+
+export default function UserTable({ users }: { users: any[] }) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="bg-white/[0.01] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl backdrop-blur-3xl relative"
+    >
+      <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/[0.01] rounded-full blur-[100px] pointer-events-none" />
+      
+      <div className="overflow-x-auto relative z-10 custom-scrollbar">
+        <table className="w-full text-left whitespace-nowrap text-sm">
+          <thead>
+            <tr className="bg-white/[0.02] text-white/40 text-[9px] font-black uppercase tracking-[0.3em] border-b border-white/5">
+              <th className="px-8 py-6">User Identity</th>
+              <th className="px-6 py-6">Tier Alignment</th>
+              <th className="px-6 py-6">Entity Allocation</th>
+              <th className="px-6 py-6 text-center">Score Delta</th>
+              <th className="px-6 py-6 text-center">Protocol Status</th>
+              <th className="px-8 py-6 text-right">System Control</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            {users.map((user, idx) => (
+              <motion.tr 
+                key={user.id} 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 + idx * 0.03 }}
+                className="hover:bg-white/[0.03] transition-all group"
+              >
+                <td className="px-8 py-6">
+                   <div className="flex flex-col">
+                      <span className="font-black text-white text-base tracking-tight leading-none mb-1 group-hover:text-green-400 transition-colors">{user.full_name}</span>
+                      <span className="text-[9px] font-black uppercase tracking-widest text-white/20">{user.email}</span>
+                   </div>
+                </td>
+                <td className="px-6 py-6 font-black text-[9px] uppercase tracking-[0.2em]">
+                   <span className={`inline-flex items-center px-3 py-1 rounded-lg border ${user.subscription_plan === 'yearly' ? 'bg-green-500/10 text-green-500 border-green-500/30' : 'bg-white/[0.03] text-white/40 border-white/5'}`}>
+                      {user.subscription_plan || 'N/A'}
+                   </span>
+                </td>
+                <td className="px-6 py-6">
+                   <span className="text-white/40 font-black text-[9px] uppercase tracking-widest truncate max-w-[150px] block">{user.charities?.name || 'Unassigned'}</span>
+                </td>
+                <td className="px-6 py-6 text-center">
+                   <div className="flex items-center justify-center gap-1.5">
+                      <span className="text-base font-black text-white tracking-tighter">{user.scores?.length || 0}</span>
+                      <span className="text-[9px] font-black text-white/10">/ 5</span>
+                   </div>
+                </td>
+                <td className="px-6 py-6 text-center">
+                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-[0.2em] border ${user.subscription_status === 'active' ? 'bg-green-500/10 text-green-500 border-green-500/30' : user.subscription_status === 'inactive' ? 'bg-white/[0.03] text-white/20 border-white/10' : user.subscription_status === 'lapsed' ? 'bg-amber-500/10 text-amber-500 border-amber-500/30' : 'bg-rose-500/10 text-rose-500 border-rose-500/30'}`}>
+                      {user.subscription_status === 'active' && <div className="w-1 h-1 bg-green-500 rounded-full shadow-[0_0_6px_#22C55E]" />}
+                      {user.subscription_status}
+                   </span>
+                </td>
+                <td className="px-8 py-6 text-right">
+                   <Link 
+                      href={`/admin/users/${user.id}`}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-white/[0.02] hover:bg-white/[0.05] text-[9px] font-black uppercase tracking-widest text-white/40 hover:text-white rounded-xl transition-all border border-white/5 hover:border-white/10 active:scale-95 shadow-xl opacity-0 group-hover:opacity-100 translate-x-3 group-hover:translate-x-0"
+                   >
+                      Inspect Node
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                   </Link>
+                </td>
+              </motion.tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </motion.div>
+  );
+}

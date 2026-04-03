@@ -1,0 +1,87 @@
+'use server';
+
+// Server actions handling global charity querying and authenticating explicit contribution parameter adjustments
+import { createServerSupabaseClient } from '@/lib/supabase';
+import { revalidatePath } from 'next/cache';
+
+export async function getCharities(featuredOnly = false) {
+  const supabase = createServerSupabaseClient();
+  let query = supabase.from('charities').select('*').eq('is_active', true).order('name');
+  
+  // Conditionally isolated query limiting to explicit flag bindings
+  if (featuredOnly) {
+    query = query.eq('is_featured', true);
+  }
+  
+  const { data, error } = await query;
+  if (error) throw new Error(error.message);
+  
+  return data || [];
+}
+
+export async function getCharityById(id: string) {
+  const supabase = createServerSupabaseClient();
+  
+  const { data: charity, error } = await supabase
+    .from('charities')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  const { data: events } = await supabase
+    .from('charity_events')
+    .select('*')
+    .eq('charity_id', id)
+    .gte('event_date', new Date().toISOString())
+    .order('event_date', { ascending: true });
+  
+  return { charity, events: events || [] };
+}
+
+export async function selectCharity(charityId: string) {
+  const supabase = createServerSupabaseClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  
+  if (authError || !user) {
+     return { error: 'Not authenticated natively.' };
+  }
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({ selected_charity_id: charityId })
+    .eq('id', user.id);
+
+  if (error) return { error: error.message };
+
+  // Actively invalidate routing caches ensuring subsequent dashboard calls hydrate accurately
+  revalidatePath('/dashboard/charity');
+  revalidatePath('/dashboard');
+  
+  return { success: true };
+}
+
+export async function updateContributionPercentage(percentage: number) {
+  const supabase = createServerSupabaseClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  
+  if (authError || !user) {
+    return { error: 'Not authenticated natively.' };
+  }
+
+  if (!Number.isInteger(percentage) || percentage < 10 || percentage > 100) {
+    return { error: 'Mathematical boundary compromised. Limits are strictly 10-100.' };
+  }
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({ charity_contribution_percentage: percentage })
+    .eq('id', user.id);
+
+  if (error) return { error: error.message };
+
+  revalidatePath('/dashboard/charity');
+  
+  return { success: true };
+}
