@@ -29,9 +29,9 @@
 
 ---
 
-## ✦ What is DigitalHero?
+## ✦ What is Golf Charity?
 
-DigitalHero is a **full-stack subscription platform** fusing competitive Stableford golf scoring with automated monthly prize draws and real-time charitable impact. Players subscribe, log scores, choose a charity beneficiary, and compete in algorithmic draw events — all through a premium, immersive web experience.
+Golf Charity is a **full-stack subscription platform** fusing competitive Stableford golf scoring with automated monthly prize draws and real-time charitable impact. Players subscribe, log scores, choose a charity beneficiary, and compete in algorithmic draw events — all through a premium, immersive web experience.
 
 > The platform is built on the **Foundry Intelligence** design system: an ultra-dark, high-contrast aesthetic driven by emerald tactical accents, 3D environmental lighting, and surgical typographic hierarchy.
 
