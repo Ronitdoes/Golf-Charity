@@ -52,7 +52,7 @@ export async function runDraw(drawId: string, mode: 'simulation' | 'publish', lo
   let poolStats;
   try {
      poolStats = await calculateMonthlyPrizePool();
-  } catch (error) {
+  } catch (_error) {
      throw new Error('Explicit Stripe-emulated mathematical projection universally dropped globally explicitly natively.');
   }
   
@@ -81,8 +81,8 @@ export async function runDraw(drawId: string, mode: 'simulation' | 'publish', lo
   // Pass 2: Physically route payouts conditionally sequentially extracting fractions algorithmically safely 
   for (const [userId, matches] of userMatches.entries()) {
      if (matches >= 3 && matches <= 5) {
-         let countForTier = matches === 5 ? match5Count : matches === 4 ? match4Count : match3Count;
-         let amount = calculatePrizeAmount(matches as 3|4|5, poolStats.totalPrizePool, countForTier, rollover);
+         const countForTier = matches === 5 ? match5Count : matches === 4 ? match4Count : match3Count;
+         const amount = calculatePrizeAmount(matches as 3|4|5, poolStats.totalPrizePool, countForTier, rollover);
          
          results.push({
             user_id: userId,

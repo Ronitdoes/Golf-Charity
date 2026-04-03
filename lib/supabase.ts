@@ -10,20 +10,20 @@ export function createServerSupabaseClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
+        get(_name: string) {
+          return cookieStore.get(_name)?.value
         },
-        set(name: string, value: string, options: CookieOptions) {
+        set(_name: string, _value: string, _options: CookieOptions) {
           try {
-            cookieStore.set({ name, value, ...options })
-          } catch (error) {
+            cookieStore.set({ name: _name, value: _value, ..._options })
+          } catch (_error) {
             // The `set` method was called from a Server Component.
           }
         },
-        remove(name: string, options: CookieOptions) {
+        remove(_name: string, _options: CookieOptions) {
           try {
-            cookieStore.set({ name, value: '', ...options })
-          } catch (error) {
+            cookieStore.set({ name: _name, value: '', ..._options })
+          } catch (_error) {
             // The `remove` method was called from a Server Component.
           }
         },
@@ -38,11 +38,11 @@ export function createAdminSupabaseClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
-       cookies: {
-          get(name: string) { return undefined },
-          set(name: string, value: string, options: CookieOptions) {},
-          remove(name: string, options: CookieOptions) {},
-       },
+        cookies: {
+          get(_name: string) { return undefined },
+          set(_name: string, _value: string, _options: CookieOptions) {},
+          remove(_name: string, _options: CookieOptions) {},
+        },
     }
   )
 }

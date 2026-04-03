@@ -35,8 +35,9 @@ export default function AuthForm({ title, fields, submitLabel, onSubmit, footer 
       if (res && res.error) {
         setErrorMsg(res.error);
       }
-    } catch (error: any) {
-      setErrorMsg(error.message || 'Something went wrong. Please try again.');
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+      setErrorMsg(errorMsg);
     } finally {
       setIsLoading(false);
     }
