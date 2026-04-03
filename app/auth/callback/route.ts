@@ -26,6 +26,12 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${origin}/login?success=Account+confirmed!+Please+log+in+to+continue.`);
     }
 
+    // Specialized handling for PKCE errors (Common on mobile apps)
+    if (exchangeError.message.includes('code verifier') || exchangeError.message.includes('PKCE')) {
+       const msg = encodeURIComponent('Security verification failed. Please open the confirmation link in the SAME browser/tab you used to sign up.');
+       return NextResponse.redirect(`${origin}/login?error=${msg}`);
+    }
+
     // Redirect with the specific exchange error message
     const msg = encodeURIComponent(exchangeError.message || 'Invalid or expired login link');
     return NextResponse.redirect(`${origin}/login?error=${msg}`);
