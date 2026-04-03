@@ -26,12 +26,12 @@
 
 ### 💳 Payment & Subscriptions
 - **Unified Razorpay Flow**: Secure donation processing and plan activation via the [Razorpay Checkout](file:///d:/acm/digitalhero/components/payments/RazorpayCheckout.tsx) component.
-- **Webhook Processing**: Real-time subscription state updates handled by [Razorpay Webhooks](file:///d:/acm/digitalhero/app/api/webhooks/razorpay/route.ts).
+- **Webhook Processing**: Real-time subscription state updates handled by [Razorpay Webhooks](file:///d:/acm/digitalhero/app/api/webhooks/razorpay/route.ts) with full HMAC signature verification using raw request bodies.
 
 ### 🏆 Prize Draw Engine
 - **Deterministic Draws**: Complex randomization logic for fair winner selection.
 - **Admin Dashboard**: Full control over charities, winners, and user prize distributions.
-- **Automated Certificates**: Dynamic generation of participation/winning certificates.
+- **Verified Payout Workflow**: Integrated proof-of-winning upload system for users and administrative review cycle for secure disbursements.
 
 ---
 
@@ -40,13 +40,12 @@
 | Category | Technology |
 | :--- | :--- |
 | **Framework** | Next.js 14 (App Router), React 18 |
-| **Languages** | TypeScript, React Three Fiber (R3F) |
-| **Database/Auth** | Supabase (PostgreSQL, Auth, Storage) |
+| **Auth/Middleware** | `@supabase/ssr` (Modern getAll/setAll pattern) |
+| **Database** | Supabase (PostgreSQL, Storage) |
 | **State** | Zustand (Global State), Server Actions (Mutations) |
 | **Styling** | Tailwind CSS, Lucide React Icons |
 | **Animations** | GSAP, Framer Motion, Lenis (Smooth Scroll) |
-| **Payments** | Razorpay SDK |
-| **Testing** | Jest, React Testing Library |
+| **Payments** | Razorpay SDK & Webhooks |
 
 ---
 
@@ -76,19 +75,14 @@ RAZORPAY_WEBHOOK_SECRET=your_webhook_secret
 
 # Other Services
 RESEND_API_KEY=your_resend_key
+ADMIN_EMAIL=admin@example.com
 ```
 
 ### 3. Database Sync
-Apply the project schema to your Supabase instance:
-```bash
-# Locate and run schema.sql in your Supabase SQL Editor
-cat supabase/schema.sql 
-```
+Apply the project schema to your Supabase instance using the `schema.sql` file located at the root of the project.
 
-### 4. Development
-```bash
-npm run dev
-```
+### 4. Vercel Deployment
+The project is optimized for Vercel with **Forced Dynamic Rendering** on protected routes to prevent build-time 403 errors and ensure runtime authorization stability.
 
 ---
 
@@ -97,35 +91,28 @@ npm run dev
 ```text
 ├── app/                  # App Router: Pages, Webhooks, and API Actions
 │   ├── actions/          # Razorpay orders and DB mutations
-│   ├── admin/            # Dashboard for managing charities/draws
-│   └── api/webhooks/     # Razorpay webhook listener
+│   ├── admin/            # Dashboard for managing charities/draws (force-dynamic)
+│   ├── api/webhooks/     # Razorpay webhook listener (HMAC verified)
+│   └── dashboard/        # User-facing winnings and score tracking (force-dynamic)
 ├── components/           # Core UI Components
 │   ├── canvas/           # Three.js / Scene logic
 │   ├── payments/         # Razorpay Checkout logic
 │   └── sections/         # Beautiful Hero and CTA blocks
 ├── lib/                  # Engines & Utilities
+│   ├── analytics.ts      # Synchronized pricing (€96/yr) logic
 │   ├── draw-engine.ts    # Core logic for raffle selection
-│   ├── razorpay.ts       # Razorpay client instantiation
-│   └── supabase.ts       # Supabase client wrapper
-└── __tests__/            # Core logic test suites
+│   └── supabase.ts       # Supabase client wrapper (Admin & User modes)
+└── middleware.ts         # Modern Supabase SSR auth protection
 ```
 
 ---
 
-## 🎨 Design System
+## 🔒 Security & Stability
 
-This project uses a custom-tuned CSS strategy:
-- **Tailwind Extend**: Custom color palettes and animation keyframes in `tailwind.config.ts`.
-- **Global Themes**: Defined in `globals.css` with a focus on dark/light mode balance and premium aesthetics.
-- **Typography**: Optimized loading using `next/font`.
-
----
-
-## 🔒 Security
-
-- **Role-Based Access (RBAC)**: Enforced via Supabase Middleware and Server Components.
-- **Secure Payments**: Signature verification for all Razorpay transactions in the webhook handler.
-- **Type Safety**: Zod schema validation for all incoming server action data.
+- **Vercel Optimized**: Protected layouts are explicitly configured with `dynamic = 'force-dynamic'` to avoid static generation failures on restricted data.
+- **Robust Webhooks**: Signature verification uses raw request buffers to prevent tampering and ensure valid payment state transitions.
+- **Modern Auth**: Implements the latest `@supabase/ssr` middleware guidelines for persistent session management across Edge environments.
+- **Admin Access**: Combined database RBAC and environment-level Master Admin bypass for high-security environments.
 
 ---
 
