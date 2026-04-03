@@ -38,11 +38,11 @@ export function createAdminSupabaseClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
-        cookies: {
-          get(_name: string) { return undefined },
-          set(_name: string, _value: string, _options: CookieOptions) {},
-          remove(_name: string, _options: CookieOptions) {},
-        },
+      cookies: {
+        get(_name: string) { return undefined },
+        set(_name: string, _value: string, _options: CookieOptions) { },
+        remove(_name: string, _options: CookieOptions) { },
+      },
     }
   )
 }

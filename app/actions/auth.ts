@@ -44,7 +44,7 @@ export async function signUp(formData: FormData) {
       const { data: adminData, error: adminError } = await supabaseAdmin.auth.admin.createUser({
         email,
         password,
-        email_confirm: true,
+        email_confirm: false, // Security: Do not auto-confirm even during bypass
         user_metadata: { full_name: fullName }
       });
 
@@ -141,7 +141,9 @@ export async function signIn(formData: FormData) {
     }
 
     // 2. High-Fidelity Verification Guard: Block access if email is not confirmed
-    if (authData.user && !authData.user.email_confirmed_at) {
+    const isConfirmed = !!(authData.user?.email_confirmed_at || authData.user?.confirmed_at);
+    
+    if (authData.user && !isConfirmed) {
       // Force logout to clear any partial session state
       await supabase.auth.signOut();
       return { error: 'Security Protocol: Please verify your email address before accessing the platform.' };
