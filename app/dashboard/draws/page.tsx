@@ -5,7 +5,7 @@ interface DrawRecord {
   draw_id: string;
   match_count: number;
   prize_amount: number | string;
-  draws: { draw_month: string; winning_numbers?: number[] }[];
+  draws: { month: string; drawn_numbers?: number[] }[];
 }
 
 export default async function DrawsDashboardPage() {
@@ -27,8 +27,8 @@ export default async function DrawsDashboardPage() {
        match_count, 
        prize_amount,
        draws ( 
-          draw_month, 
-          winning_numbers 
+          month, 
+          drawn_numbers 
        )
     `)
     .eq('user_id', user!.id)
@@ -76,7 +76,7 @@ export default async function DrawsDashboardPage() {
            <div className="flex flex-col gap-4">
               {participations?.map((record: DrawRecord, idx: number) => {
                  const draw = record.draws[0];
-                 const monthStr = draw ? new Date(draw.draw_month).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }) : 'Unknown';
+                 const monthStr = draw ? new Date(draw.month).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }) : 'Unknown';
                  
                  return (
                    <div key={`${record.draw_id}-${idx}`} className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors hover:border-neutral-700">
@@ -93,7 +93,7 @@ export default async function DrawsDashboardPage() {
                         {/* Numbers mapping representation securely visually interpreted linearly */}
                         <div className="flex flex-wrap gap-2">
                            <span className="text-xs text-neutral-500 mt-1 mr-1">Global Draw:</span>
-                           {draw?.winning_numbers?.map((num: number, i: number) => (
+                           {draw?.drawn_numbers?.map((num: number, i: number) => (
                               <div key={i} className="w-6 h-6 rounded-md bg-neutral-800 border border-neutral-700 flex items-center justify-center text-xs text-white font-medium">
                                 {num}
                               </div>

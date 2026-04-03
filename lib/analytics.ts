@@ -20,9 +20,9 @@ export async function getSubscriberStats() {
     yearly: profiles?.filter(p => p.subscription_status === 'active' && p.subscription_plan === 'yearly').length || 0,
   };
 
-  // Estimate Monthly Recurring Revenue (MRR)
-  // Monthly price: £10, Yearly: £100 (£8.33/mo)
-  const mrr = (stats.monthly * 10) + (stats.yearly * (100 / 12));
+  // Estimated Monthly Recurring Revenue (MRR)
+  // Monthly price: £10, Yearly: £96 (£8.00/mo)
+  const mrr = (stats.monthly * 10) + (stats.yearly * (96 / 12));
 
   return { ...stats, mrr };
 }
@@ -68,7 +68,7 @@ export async function getCharityStats() {
   const impactMap: Record<string, number> = {};
   activeProfiles.forEach(p => {
     if (p.selected_charity_id) {
-       const rev = p.subscription_plan === 'monthly' ? 10 : (100 / 12);
+       const rev = p.subscription_plan === 'monthly' ? 10 : (96 / 12);
        // 40% of rev goes to charity
        const contribution = rev * 0.40; 
        impactMap[p.selected_charity_id] = (impactMap[p.selected_charity_id] || 0) + contribution;

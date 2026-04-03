@@ -3,6 +3,9 @@ import { createServerSupabaseClient } from '@/lib/supabase';
 import { redirect } from 'next/navigation';
 import AdminLayout from '@/components/admin/AdminLayout';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function AdminRootLayout({ children }: { children: React.ReactNode }) {
   const supabase = createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();

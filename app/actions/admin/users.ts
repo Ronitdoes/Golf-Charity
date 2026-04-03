@@ -17,7 +17,7 @@ export async function getAllUsers(page: number = 1, filters?: { query?: string, 
     .from('profiles')
     .select(`
       *,
-      scores!inner (id),
+      scores (id),
       charities (name)
     `, { count: 'exact' });
 

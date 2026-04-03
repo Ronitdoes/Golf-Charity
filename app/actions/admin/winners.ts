@@ -63,7 +63,7 @@ export async function approveWinner(id: string) {
   const { error } = await supabase
     .from('draw_results')
     .update({ 
-       payment_status: 'pending',
+       payment_status: 'paid',
        verified_at: new Date().toISOString() 
     })
     .eq('id', id);

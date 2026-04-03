@@ -10,8 +10,9 @@ interface WinningsRecord {
   match_count: number;
   prize_amount: number;
   payment_status: 'pending' | 'paid';
+  proof_url?: string | null;
   draws: {
-    draw_month: string;
+    month: string;
   };
 }
 
@@ -36,7 +37,8 @@ export default function WinningsDashboardPage() {
            match_count,
            prize_amount,
            payment_status,
-           draws ( draw_month )
+           proof_url,
+           draws ( month )
         `)
         .eq('user_id', user.id)
         .gt('prize_amount', 0)
@@ -70,9 +72,23 @@ export default function WinningsDashboardPage() {
         .upload(filePath, file);
 
      if (!uploadError) {
-        // Optimistically update UI status although typically Admin verifies thoroughly
-        setRecords(prev => prev.map(r => r.id === recordId ? { ...r, payment_status: 'paid' } : r));
-        alert('Proof securely uploaded! An admin will verify the payload asynchronously.');
+        // Retrieve valid Public URL to associate back into the result row
+        const { data: { publicUrl } } = supabase.storage.from('proofs').getPublicUrl(filePath);
+
+        // Update the draw_result row with the new proof_url
+        const { error: dbError } = await supabase
+           .from('draw_results')
+           .update({ proof_url: publicUrl })
+           .eq('id', recordId);
+
+        if (!dbError) {
+           // Optimistically update local state to show uploaded status
+           setRecords(prev => prev.map(r => r.id === recordId ? { ...r, proof_url: publicUrl } : r));
+           alert('Proof securely uploaded! An admin will verify the payload asynchronously.');
+        } else {
+           console.error('[DB_UPDATE_ERROR]', dbError);
+           alert('Physical file uploaded but DB record synchronization failed.');
+        }
      } else {
         console.error(uploadError);
         alert('Upload isolated fault. Does the storage bucket exist natively?');
@@ -126,7 +142,7 @@ export default function WinningsDashboardPage() {
                 </thead>
                 <tbody className="divide-y divide-neutral-800">
                   {records.map((r) => {
-                     const date = new Date(r.draws.draw_month).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+                     const date = new Date(r.draws.month).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
                      
                      return (
                        <tr key={r.id} className="hover:bg-neutral-800/30 transition-colors">

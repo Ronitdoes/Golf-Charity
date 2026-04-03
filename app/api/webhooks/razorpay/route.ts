@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { createServerSupabaseClient } from '@/lib/supabase';
+import { createAdminSupabaseClient } from '@/lib/supabase';
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  const bodyText = await req.text();
+  const body = JSON.parse(bodyText);
   const signature = req.headers.get('x-razorpay-signature');
 
   if (!signature) {
@@ -16,10 +17,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Configuration fault' }, { status: 500 });
   }
 
-  // Verify signature
+  // Verify signature using the raw body text as per Razorpay documentation
   const expectedSignature = crypto
     .createHmac('sha256', webhookSecret)
-    .update(JSON.stringify(body))
+    .update(bodyText)
     .digest('hex');
 
   const isValid = expectedSignature === signature;
@@ -33,11 +34,13 @@ export async function POST(req: Request) {
 
   // Handle specific events
   if (event === 'payment.captured' || event === 'order.paid') {
-    const _orderId = payload.payment?.entity?.order_id || payload.order?.entity?.id;
-    const notes = payload.payment?.entity?.notes || payload.order?.entity?.notes;
+    const payment = payload.payment?.entity;
+    const order = payload.order?.entity;
+    const notes = payment?.notes || order?.notes;
     
     if (notes && notes.userId) {
-      const supabase = createServerSupabaseClient();
+      // Use Admin client to bypass RLS for server-to-server updates
+      const supabase = createAdminSupabaseClient();
       
       const { error } = await supabase
         .from('profiles')

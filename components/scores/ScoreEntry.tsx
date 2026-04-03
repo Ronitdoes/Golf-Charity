@@ -39,7 +39,7 @@ export default function ScoreEntry({ onAddScore, scoreCount }: ScoreEntryProps) 
 
     if (!result.success) {
        // Isolate descriptive zod payload purely for surface projection
-      setErrorMsg(result.error.errors[0].message);
+      setErrorMsg(result.error.issues[0]?.message ?? 'Please check your score details and try again.');
       return;
     }
 

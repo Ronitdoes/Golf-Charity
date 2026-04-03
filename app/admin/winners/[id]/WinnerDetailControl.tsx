@@ -144,7 +144,7 @@ export default function WinnerDetailControl({ result }: { result: WinnerResult }
                            >
                               {isProcessing ? 'SYNCHRONIZING...' : 'MARK AS OFFICIALLY PAID'}
                            </button>
-                           {result.payment_status !== 'pending' && (
+                           {result.payment_status === 'pending' && (
                               <button 
                                  onClick={() => handleAction('approve')}
                                  disabled={isProcessing}
