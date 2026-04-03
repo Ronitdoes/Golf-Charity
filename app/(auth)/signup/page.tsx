@@ -46,8 +46,8 @@ export default function SignupPage() {
   const handleVerify = async (code: string) => {
     const res = await verifyEmailOTP(currentEmail.current, code);
     if (res && res.success) {
-      // Redirect after a short delay for feedback
-      setTimeout(() => router.push('/login?success=Account+confirmed!+Please+log+in.'), 1500);
+      // Redirect to hero page (hompage) after a short delay for feedback
+      setTimeout(() => router.push('/?success=Account+confirmed!+Welcome+to+Digital+Hero.'), 1500);
     }
     return res;
   };
