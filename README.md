@@ -1,131 +1,134 @@
-# 🏌️‍♂️ Digital Hero - Golf Charity Platform / ITZFIZZ
+# ⛳️ Digital Hero: Golf Charity Platform
 
-A high-performance, visually engaging modern web application built for charity golf events and draws. This platform features a premium UI/UX, seamless animations, robust backend systems, and a comprehensive administrative dashboard for managing charities, users, draws, and certificates.
+<div align="center">
+
+![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)
+![Supabase](https://img.shields.io/badge/Supabase-Auth_&_DB-3ECF8E?style=for-the-badge&logo=supabase)
+![Razorpay](https://img.shields.io/badge/Razorpay-Payments-02042B?style=for-the-badge&logo=razorpay)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-Animations-0055FF?style=for-the-badge&logo=framer)
+
+**A high-performance, visually stunning platform for charity golf events and decentralized prize draws.**
+
+[Explore Features](#-key-features) • [Tech Stack](#-tech-stack) • [Setup Guide](#-setup-guide) • [Architecture](#-project-architecture)
+
+</div>
 
 ---
 
 ## ✨ Key Features
 
-- **Premium UI & Interactions**: Beautiful, high-fidelity hero sections, parallax scrolling, stagger animations, and a sleek 3D interface using Three.js and GSAP. 
-- **Admin Dashboard**: Full administrative suite to manage users, charities, event data, draws, and generated certificates. Includes capabilities for image uploading and certificate template editing.
-- **Robust Authentication**: Secure role-based access to the admin dashboard and user actions powered by Supabase Auth.
-- **Dynamic Draw Engine**: Performant draw system logic for managing charity golf raffles/draws. Fully tested with Jest.
-- **Advanced State Management**: Fast client-side state handling with Zustand.
-- **Payments**: Integrated with Stripe (and Razorpay capabilities) for handling charity donations securely.
-- **Typescript-First**: Strict type checking across the entire application to ensure long-term stability and maintainability.
+### 💎 Premium User Experience
+- **GSAP & Framer Motion**: Smooth, staggered entry animations and scroll-triggered parallax effects.
+- **Three.js Integration**: Interactive 3D scene layers (`Scene.tsx`) for a futuristic editorial feel.
+- **Stark Glassmorphism**: Modern, translucent UI components with high-fidelity blur and border effects.
+
+### 💳 Payment & Subscriptions
+- **Unified Razorpay Flow**: Secure donation processing and plan activation via the [Razorpay Checkout](file:///d:/acm/digitalhero/components/payments/RazorpayCheckout.tsx) component.
+- **Webhook Processing**: Real-time subscription state updates handled by [Razorpay Webhooks](file:///d:/acm/digitalhero/app/api/webhooks/razorpay/route.ts).
+
+### 🏆 Prize Draw Engine
+- **Deterministic Draws**: Complex randomization logic for fair winner selection.
+- **Admin Dashboard**: Full control over charities, winners, and user prize distributions.
+- **Automated Certificates**: Dynamic generation of participation/winning certificates.
 
 ---
 
 ## 🛠 Tech Stack
 
-### Core
-- **Framework**: [Next.js 14](https://nextjs.org/) (App Router format for server components and routing)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-
-### UI / Animations & 3D Interaction
-- **Animations**: [Framer Motion](https://www.framer.com/motion/) & [GSAP](https://gsap.com/)
-- **Smooth Scrolling**: [Lenis](https://studiofreight.github.io/lenis/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **3D Graphics**: [Three.js](https://threejs.org/) & [React Three Fiber / Drei](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction)
-- **Charts**: [Recharts](https://recharts.org/)
-
-### Backend, Database & APIs
-- **Database & Auth**: [Supabase](https://supabase.com/) (SSR + supabase-js)
-- **Payments**: [Stripe](https://stripe.com/) 
-- **Validation**: [Zod](https://zod.dev/)
-
-### Tooling & Testing
-- **Testing Engine**: [Jest](https://jestjs.io/)
-- **Linting**: ESLint
+| Category | Technology |
+| :--- | :--- |
+| **Framework** | Next.js 14 (App Router), React 18 |
+| **Languages** | TypeScript, React Three Fiber (R3F) |
+| **Database/Auth** | Supabase (PostgreSQL, Auth, Storage) |
+| **State** | Zustand (Global State), Server Actions (Mutations) |
+| **Styling** | Tailwind CSS, Lucide React Icons |
+| **Animations** | GSAP, Framer Motion, Lenis (Smooth Scroll) |
+| **Payments** | Razorpay SDK |
+| **Testing** | Jest, React Testing Library |
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Setup Guide
 
-### Prerequisites
-Make sure you have Node.js 18+ and `npm` installed on your local development machine. 
-
-### 1. Clone the repository
+### 1. Repository Initialization
 ```bash
 git clone https://github.com/Ronitdoes/golf.git
 cd digitalhero
-```
-
-### 2. Install Dependencies
-```bash
 npm install
 ```
 
-### 3. Setup Environment Variables
-Copy the example environment file and populate the necessary keys.
+### 2. Environment Configuration
+Create a `.env.local` file in the root directory:
 
-```bash
-cp .env.local.example .env.local
+```env
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Razorpay Configuration
+NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=your_secret_key
+RAZORPAY_WEBHOOK_SECRET=your_webhook_secret
+
+# Other Services
+RESEND_API_KEY=your_resend_key
 ```
 
-**Required Keys (`.env.local`)**:
-- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
-- Stripe/Razorpay Keys (if applicable)
+### 3. Database Sync
+Apply the project schema to your Supabase instance:
+```bash
+# Locate and run schema.sql in your Supabase SQL Editor
+cat supabase/schema.sql 
+```
 
-### 4. Run the Development Server
+### 4. Development
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. The environment hot-reloads when making changes to `app/page.tsx` or any components.
-
 ---
 
-## 🏗 Project Structure
+## 🏗 Project Architecture
 
 ```text
-├── .env.local.example     # Template for local environment variables
-├── app/                   # Next.js App Router specific pages and routing 
-│   ├── actions/           # Server actions for form handling/data mutation
-│   ├── admin/             # Admin Dashboard UI pages & state
-│   ├── auth/              # Authentication routes (callback, etc)
-│   └── dashboard/         # Secured User/Client Dashboard pages
-├── components/            # Reusable UI component modules
-│   ├── canvas/            # 3D Fiber / Three.js scenes and objects
-│   ├── scores/            # Score listing components
-│   ├── sections/          # Major layout blocks (Hero, CTAs)
-│   └── ui/                # Core modular components (Buttons, Inputs, Forms)
-├── lib/                   # Integrations and utilities (Stripe instantiations, drawing logic)
-├── scripts/               # Utility scripts (Admin user generation, etc)
-├── supabase/              # Supabase DB schema and configurations (schema.sql)
-└── __tests__/             # Jest test groupings
+├── app/                  # App Router: Pages, Webhooks, and API Actions
+│   ├── actions/          # Razorpay orders and DB mutations
+│   ├── admin/            # Dashboard for managing charities/draws
+│   └── api/webhooks/     # Razorpay webhook listener
+├── components/           # Core UI Components
+│   ├── canvas/           # Three.js / Scene logic
+│   ├── payments/         # Razorpay Checkout logic
+│   └── sections/         # Beautiful Hero and CTA blocks
+├── lib/                  # Engines & Utilities
+│   ├── draw-engine.ts    # Core logic for raffle selection
+│   ├── razorpay.ts       # Razorpay client instantiation
+│   └── supabase.ts       # Supabase client wrapper
+└── __tests__/            # Core logic test suites
 ```
 
 ---
 
-## 🧪 Testing
+## 🎨 Design System
 
-The codebase enforces testing on core business/game logic (like the Draw Engine validation). 
-You can run the existing test suite via Jest:
-
-```bash
-npm run test
-```
+This project uses a custom-tuned CSS strategy:
+- **Tailwind Extend**: Custom color palettes and animation keyframes in `tailwind.config.ts`.
+- **Global Themes**: Defined in `globals.css` with a focus on dark/light mode balance and premium aesthetics.
+- **Typography**: Optimized loading using `next/font`.
 
 ---
 
-## 🎨 Design Philosophy
+## 🔒 Security
 
-### The "WOW" Factor
-A large portion of the work done in this repository consists of perfecting an editorial, hyper-modern aesthetic. The UI utilizes strict adherence to glass-morphism, custom tailwind `@theme` boundaries for consistent styling across varying environments, and complex staggered reveal animations via GSAP and Framer motion.
-
-### Optimization
-Significant effort has been allocated towards ensuring that dynamic import bundling strategy protects the user from UI stammers. `Lenis` intercepts normal scroll mechanics allowing `Three.js` layers to float beautifully alongside standard DOM elements transparently. 
+- **Role-Based Access (RBAC)**: Enforced via Supabase Middleware and Server Components.
+- **Secure Payments**: Signature verification for all Razorpay transactions in the webhook handler.
+- **Type Safety**: Zod schema validation for all incoming server action data.
 
 ---
 
-## 📦 Deployment
-
-The easiest way to deploy this Next.js app is to use the [Vercel Platform](https://vercel.com/new).
-
-When deploying:
-- Ensure all environment variables from `.env.local` are placed in the Vercel project settings.
-- Run migrations or load `schema.sql` into the production Supabase instance.
-- TypeScript build errors are configured to be bypassed during Vercel's build pipeline (`ignoreBuildErrors: true` in `next.config.mjs`) to allow decoupled progress between strict typing & UI iteration in staging deployments.
+<div align="center">
+Built for high-impact charity golf events. 🏌️‍♂️ ⛳️
+</div>
