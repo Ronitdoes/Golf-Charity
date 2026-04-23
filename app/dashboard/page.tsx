@@ -12,6 +12,14 @@ export default async function DashboardOverview({
   const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
 
+  // Persist sandbox success state to database natively to ensure persistent access
+  if (payment === 'success' && process.env.CASHFREE_ENVIRONMENT === 'SANDBOX') {
+    await supabase
+      .from('profiles')
+      .update({ subscription_status: 'active', subscription_plan: 'monthly' })
+      .eq('id', user!.id);
+  }
+
   // Concurrent data fetching natively retrieving aggregate boundaries safely without RLS leakage
   const [
     { data: profile },
