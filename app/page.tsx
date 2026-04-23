@@ -53,7 +53,7 @@ export default async function Home() {
 
         {/* Section 5: CTA (80-100% scroll) */}
         <div className="w-full min-h-[100svh]">
-           <SubscribeCTA user={user} />
+          <SubscribeCTA user={user} isSubscriptionActive={isSubscriptionActive} />
         </div>
 
       </main>

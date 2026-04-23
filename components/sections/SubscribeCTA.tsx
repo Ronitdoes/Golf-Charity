@@ -31,7 +31,7 @@ const plans = [
   },
 ];
 
-export default function SubscribeCTA({ user }: { user?: User | null }) {
+export default function SubscribeCTA({ user, isSubscriptionActive }: { user?: User | null, isSubscriptionActive?: boolean }) {
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -51,81 +51,109 @@ export default function SubscribeCTA({ user }: { user?: User | null }) {
           </h1>
         </motion.div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl mx-auto">
-          {plans.map((plan, i) => (
-            <motion.div
-              key={plan.name}
-              initial={{ opacity: 0, x: shouldReduceMotion ? 0 : (i === 0 ? -50 : 50) }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true }}
-              className={`relative group bg-neutral-900/40 p-10 md:p-14 rounded-[2.5rem] md:rounded-[3.5rem] border border-white/5 backdrop-blur-md flex flex-col items-center text-center space-y-10 transition-all hover:bg-neutral-900/60 h-full ${plan.saving ? 'ring-2 ring-green-500/30' : ''}`}
-            >
-              {plan.saving && (
-                <div className="absolute top-8 right-8 bg-green-500 text-neutral-950 font-black text-[10px] md:text-xs px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-lg z-20">
-                  {plan.saving}
-                </div>
-              )}
-              
-              <div className="space-y-1">
-                <h3 className="text-2xl font-black text-white tracking-tight">{plan.name} Plan</h3>
-                <div className="flex flex-col items-center justify-center">
-                  {plan.oldPrice && (
-                    <span className="text-white/20 text-lg font-bold line-through ml-[-30px]">{plan.oldPrice}</span>
-                  )}
-                  <div className="flex items-end justify-center gap-1.5 mt-[-5px]">
-                    <span className="text-5xl md:text-6xl font-black text-white tracking-tighter">{plan.price}</span>
-                    <span className="text-neutral-500 text-sm font-bold mb-2 capitalize md:mb-3">/ {plan.interval}</span>
+        {isSubscriptionActive ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="bg-white/[0.02] border border-green-500/20 p-12 md:p-20 rounded-[3rem] md:rounded-[4rem] backdrop-blur-2xl space-y-8 max-w-3xl mx-auto relative overflow-hidden"
+          >
+             <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 rounded-full blur-[80px] pointer-events-none" />
+             <div className="w-20 h-20 rounded-3xl bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(34,197,94,0.1)]">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+             </div>
+             <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">Your Terminal is Active</h2>
+             <p className="text-white/40 font-bold text-lg max-w-md mx-auto italic">
+                "Welcome back, Player. Your tactical synchronization is active and all features are currently unlocked."
+             </p>
+             <div className="pt-8">
+               <Link 
+                 href="/dashboard" 
+                 className="inline-block px-12 py-6 bg-green-500 hover:bg-green-400 text-neutral-950 font-black rounded-2xl transition-all shadow-[0_20px_40px_-10px_rgba(34,197,94,0.3)] hover:scale-105 active:scale-95 uppercase tracking-widest text-sm"
+               >
+                 Return to Dashboard
+               </Link>
+             </div>
+          </motion.div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl mx-auto">
+            {plans.map((plan, i) => (
+              <motion.div
+                key={plan.name}
+                initial={{ opacity: 0, x: shouldReduceMotion ? 0 : (i === 0 ? -50 : 50) }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+                className={`relative group bg-neutral-900/40 p-10 md:p-14 rounded-[2.5rem] md:rounded-[3.5rem] border border-white/5 backdrop-blur-md flex flex-col items-center text-center space-y-10 transition-all hover:bg-neutral-900/60 h-full ${plan.saving ? 'ring-2 ring-green-500/30' : ''}`}
+              >
+                {plan.saving && (
+                  <div className="absolute top-8 right-8 bg-green-500 text-neutral-950 font-black text-[10px] md:text-xs px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-lg z-20">
+                    {plan.saving}
+                  </div>
+                )}
+                
+                <div className="space-y-1">
+                  <h3 className="text-2xl font-black text-white tracking-tight">{plan.name} Plan</h3>
+                  <div className="flex flex-col items-center justify-center">
+                    {plan.oldPrice && (
+                      <span className="text-white/20 text-lg font-bold line-through ml-[-30px]">{plan.oldPrice}</span>
+                    )}
+                    <div className="flex items-end justify-center gap-1.5 mt-[-5px]">
+                      <span className="text-5xl md:text-6xl font-black text-white tracking-tighter">{plan.price}</span>
+                      <span className="text-neutral-500 text-sm font-bold mb-2 capitalize md:mb-3">/ {plan.interval}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Features List with flex-grow to push button down */}
-              <div className="flex justify-center w-full flex-1">
-                <ul className="space-y-5 text-neutral-300 w-full max-w-[240px] md:max-w-[280px]">
-                  {features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-4 text-sm md:text-base font-bold text-left">
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20">
-                        <svg className="w-3.5 h-3.5 text-green-500" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                      <span className="tracking-tight leading-tight">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                {/* Features List with flex-grow to push button down */}
+                <div className="flex justify-center w-full flex-1">
+                  <ul className="space-y-5 text-neutral-300 w-full max-w-[240px] md:max-w-[280px]">
+                    {features.map((feature) => (
+                      <li key={feature} className="flex items-center gap-4 text-sm md:text-base font-bold text-left">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20">
+                          <svg className="w-3.5 h-3.5 text-green-500" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <span className="tracking-tight leading-tight">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-              {user ? (
-                <CashfreeCheckout 
-                  plan={plan.name.toLowerCase() as 'monthly' | 'yearly'} 
-                  user={user}
-                  buttonText={`Subscribe ${plan.name} Now`}
-                  className={`w-full py-5 md:py-6 rounded-2xl font-black text-base md:text-lg tracking-tight transition-all duration-300 hover:scale-[1.05] active:scale-95 flex items-center justify-center gap-3 mt-auto ${
-                    plan.saving 
-                    ? 'bg-green-500 text-neutral-950 shadow-[0_20px_40px_-10px_rgba(34,197,94,0.4)] hover:shadow-[0_20px_50px_-5px_rgba(34,197,94,0.6)]' 
-                    : 'bg-white text-neutral-950'
-                  }`}
-                />
-              ) : (
-                <Link
-                  href={plan.href}
-                  className={`w-full py-5 md:py-6 rounded-2xl font-black text-base md:text-lg tracking-tight transition-all duration-300 hover:scale-[1.05] active:scale-95 flex items-center justify-center gap-3 mt-auto ${
-                    plan.saving 
-                    ? 'bg-green-500 text-neutral-950 shadow-[0_20px_40px_-10px_rgba(34,197,94,0.4)] hover:shadow-[0_20px_50px_-5px_rgba(34,197,94,0.6)]' 
-                    : 'bg-white text-neutral-950'
-                  }`}
-                >
-                  Join the Club
-                  <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </Link>
-              )}
-            </motion.div>
-          ))}
-        </div>
+                {user ? (
+                  <CashfreeCheckout 
+                    plan={plan.name.toLowerCase() as 'monthly' | 'yearly'} 
+                    user={user}
+                    buttonText={`Subscribe ${plan.name} Now`}
+                    className={`w-full py-5 md:py-6 rounded-2xl font-black text-base md:text-lg tracking-tight transition-all duration-300 hover:scale-[1.05] active:scale-95 flex items-center justify-center gap-3 mt-auto ${
+                      plan.saving 
+                      ? 'bg-green-500 text-neutral-950 shadow-[0_20px_40px_-10px_rgba(34,197,94,0.4)] hover:shadow-[0_20px_50px_-5px_rgba(34,197,94,0.6)]' 
+                      : 'bg-white text-neutral-950'
+                    }`}
+                  />
+                ) : (
+                  <Link
+                    href={plan.href}
+                    className={`w-full py-5 md:py-6 rounded-2xl font-black text-base md:text-lg tracking-tight transition-all duration-300 hover:scale-[1.05] active:scale-95 flex items-center justify-center gap-3 mt-auto ${
+                      plan.saving 
+                      ? 'bg-green-500 text-neutral-950 shadow-[0_20px_40px_-10px_rgba(34,197,94,0.4)] hover:shadow-[0_20px_50px_-5px_rgba(34,197,94,0.6)]' 
+                      : 'bg-white text-neutral-950'
+                    }`}
+                  >
+                    Join the Club
+                    <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </Link>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        )}
 
         {/* Footer Link */}
         <motion.p

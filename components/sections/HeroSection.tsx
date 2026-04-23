@@ -142,12 +142,21 @@ export default function HeroSection({ user, isAdmin, isSubscriptionActive }: { u
           viewport={{ once: true }}
           className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6"
         >
-          <button 
-            onClick={() => scrollToSection('membership')}
-            className="w-full sm:w-auto px-10 py-5 bg-green-500 hover:bg-green-400 text-neutral-950 font-black text-lg tracking-tight rounded-2xl shadow-[0_20px_40px_-10px_rgba(34,197,94,0.4)] transition-all hover:scale-105 active:scale-95"
-          >
-            Subscribe Now
-          </button>
+          {isSubscriptionActive ? (
+            <Link 
+              href="/dashboard"
+              className="w-full sm:w-auto px-10 py-5 bg-green-500 hover:bg-green-400 text-neutral-950 font-black text-lg tracking-tight rounded-2xl shadow-[0_20px_40px_-10px_rgba(34,197,94,0.4)] transition-all hover:scale-105 active:scale-95 text-center"
+            >
+              Go to Dashboard
+            </Link>
+          ) : (
+            <button 
+              onClick={() => scrollToSection('membership')}
+              className="w-full sm:w-auto px-10 py-5 bg-green-500 hover:bg-green-400 text-neutral-950 font-black text-lg tracking-tight rounded-2xl shadow-[0_20px_40px_-10px_rgba(34,197,94,0.4)] transition-all hover:scale-105 active:scale-95"
+            >
+              Subscribe Now
+            </button>
+          )}
           <button 
             onClick={() => scrollToSection('how-it-works')}
             className="w-full sm:w-auto px-10 py-5 bg-white/5 hover:bg-white/10 text-white font-bold text-lg rounded-2xl border border-white/10 transition-all active:scale-95"
