@@ -2,6 +2,7 @@
 
 import { cashfree } from '@/lib/cashfree';
 import { createServerSupabaseClient } from '@/lib/supabase';
+import { headers } from 'next/headers';
 
 export async function createCashfreeOrder(plan: 'monthly' | 'yearly') {
   const supabase = createServerSupabaseClient();
@@ -11,6 +12,9 @@ export async function createCashfreeOrder(plan: 'monthly' | 'yearly') {
 
   const amount = plan === 'monthly' ? 10 : 96; // Adjust amount based on plan
   const currency = 'EUR';
+
+  const headersList = headers();
+  const origin = headersList.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://golf-blue.vercel.app';
 
   try {
     const request = {
@@ -23,7 +27,7 @@ export async function createCashfreeOrder(plan: 'monthly' | 'yearly') {
         customer_phone: '9999999999' // Required by Cashfree, could be collected from user
       },
       order_meta: {
-        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?payment=success`,
+        return_url: `${origin}/dashboard?payment=success`,
       },
       order_tags: {
         userId: user.id,
@@ -36,9 +40,15 @@ export async function createCashfreeOrder(plan: 'monthly' | 'yearly') {
     return {
       payment_session_id: response.data.payment_session_id,
       order_id: response.data.order_id,
+      error: null,
     };
-  } catch (error) {
-    console.error('[CASHFREE_ORDER_CREATE_ERROR]', error);
-    throw new Error('Failed to create payment order');
+  } catch (error: any) {
+    const errorMsg = error?.response?.data?.message || error?.message || 'Failed to create payment order';
+    console.error('[CASHFREE_ORDER_CREATE_ERROR]', error?.response?.data || error);
+    return {
+      payment_session_id: null,
+      order_id: null,
+      error: errorMsg,
+    };
   }
 }

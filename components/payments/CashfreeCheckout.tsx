@@ -25,6 +25,10 @@ export default function CashfreeCheckout({
     try {
       const order = await createCashfreeOrder(plan);
 
+      if (order.error || !order.payment_session_id) {
+        throw new Error(order.error || 'Failed to initialize payment session. Please check your credentials.');
+      }
+
       const cashfree = await load({
         mode: process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT === 'PRODUCTION' ? 'production' : 'sandbox'
       });
