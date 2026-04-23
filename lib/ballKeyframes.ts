@@ -1,7 +1,7 @@
 // Scroll-based 3D transform keyframes for the hero ball visual
 // progress (0-1) maps to { ry: rotationY, rx: rotationX, x: positionX, y: positionY, scale: scale }
 
-export interface BallState {
+interface BallState {
   ry: number;
   rx: number;
   x: number;
@@ -9,7 +9,7 @@ export interface BallState {
   scale: number;
 }
 
-export const BALL_KEYFRAMES = [
+const BALL_KEYFRAMES = [
   { progress: 0.00, ry: 0, rx: 0, x: 0, y: 0, scale: 1.0 }, // Hero (Centered)
   { progress: 0.10, ry: 0.2, rx: 0.1, x: 0, y: -0.2, scale: 1.05 }, // Transitioning
   { progress: 0.25, ry: 1.2, rx: 0.3, x: 1.8, y: -0.5, scale: 1.1 }, // How It Works (Content Left, Ball Right)

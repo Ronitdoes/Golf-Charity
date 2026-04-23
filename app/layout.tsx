@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
-import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -11,7 +10,9 @@ export const metadata: Metadata = {
   title: 'Golf Charity Subscription Platform',
   description: 'Enter your scores, support charities, and win monthly prizes.',
   icons: {
-    icon: '/icon.png',
+    icon: [
+      { url: '/icon.webp', type: 'image/webp' },
+    ],
   },
 };
 
@@ -26,10 +27,6 @@ export default function RootLayout({
         <SmoothScrollProvider>
           {children}
         </SmoothScrollProvider>
-        <Script
-          id="razorpay-checkout"
-          src="https://checkout.razorpay.com/v1/checkout.js"
-        />
       </body>
     </html>
   );

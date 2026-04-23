@@ -4,7 +4,7 @@ import CharityFormPage from '../../CharityFormPage';
 import { notFound } from 'next/navigation';
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   
   const [charityRes, eventsRes] = await Promise.all([
     supabase.from('charities').select('*').eq('id', params.id).single(),

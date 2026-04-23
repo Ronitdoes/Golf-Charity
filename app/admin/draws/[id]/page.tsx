@@ -26,7 +26,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const { draw } = result;
   if (!draw) return notFound();
 
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   
   // Count eligible users: Active Subscription and exactly 5 scores
   const { data: eligibleUsers } = await supabase

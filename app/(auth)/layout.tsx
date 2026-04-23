@@ -4,7 +4,7 @@ import { createServerSupabaseClient } from '@/lib/supabase';
 import Link from 'next/link';
 
 export default async function AuthLayout({ children }: { children: React.ReactNode }) {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   // Redirect users who are already logged in to the dashboard

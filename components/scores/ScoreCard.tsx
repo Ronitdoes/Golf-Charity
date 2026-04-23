@@ -4,7 +4,7 @@ import type { Score } from '@/hooks/useScores';
 interface ScoreCardProps {
   score: Score;
   onDelete: (id: string) => void;
-  onEdit: (id: string, score: number) => Promise<any>;
+  onEdit: (id: string, score: number) => Promise<{ error?: string; success?: boolean } | void>;
   isDeleting?: boolean;
 }
 

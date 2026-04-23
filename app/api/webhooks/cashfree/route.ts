@@ -38,13 +38,12 @@ export async function POST(req: Request) {
 
   // Handle PAYMENT_SUCCESS_WEBHOOK
   if (type === 'PAYMENT_SUCCESS_WEBHOOK') {
-    const payment = data.payment;
     const order = data.order;
     const tags = order?.order_tags;
     
     if (tags && tags.userId) {
       // Use Admin client to bypass RLS for server-to-server updates
-      const supabase = createAdminSupabaseClient();
+      const supabase = await createAdminSupabaseClient();
       
       const { error } = await supabase
         .from('profiles')

@@ -15,10 +15,10 @@ export async function GET(request: Request) {
   }
   
   // Also handle optional next parameter to redirect user to specific destination
-  const next = searchParams.get('next') ?? '/dashboard';
+  // (Removed unused 'next' variable)
   
   if (code) {
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
     
     if (!exchangeError) {

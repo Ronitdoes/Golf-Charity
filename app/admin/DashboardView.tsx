@@ -44,19 +44,19 @@ export default function AdminDashboardClient({ stats }: { stats: Stat[] }) {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.1, duration: 0.8, ease: [0.215, 0.61, 0.355, 1] }}
-            className="p-10 rounded-[2.5rem] bg-white/[0.02] border border-white/5 space-y-6 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.5)] backdrop-blur-xl relative overflow-hidden group hover:bg-white/[0.04] transition-colors"
+            className="p-6 lg:p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 space-y-4 lg:space-y-6 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.5)] backdrop-blur-xl relative overflow-hidden group hover:bg-white/[0.04] transition-colors"
           >
             {/* Ambient Glow */}
             <div className="absolute top-0 right-0 w-24 h-24 bg-green-500/5 rounded-full blur-3xl group-hover:bg-green-500/10 transition-all" />
             
             <div className="flex items-center justify-between relative z-10">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-neutral-950 shadow-[0_10px_20px_-5px_rgba(34,197,94,0.4)] group-hover:scale-110 group-hover:rotate-3 transition-transform">
+              <div className="w-12 h-12 flex-shrink-0 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-neutral-950 shadow-[0_10px_20px_-5px_rgba(34,197,94,0.4)] group-hover:scale-110 group-hover:rotate-3 transition-transform">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d={stat.icon} />
                 </svg>
               </div>
-              <div className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/5">
-                <span className="text-[10px] font-black uppercase tracking-widest text-white/40">
+              <div className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/5 flex-shrink-0">
+                <span className="text-[10px] font-black uppercase tracking-wider text-white/40 whitespace-nowrap">
                   {stat.change}
                 </span>
               </div>
@@ -64,7 +64,7 @@ export default function AdminDashboardClient({ stats }: { stats: Stat[] }) {
             
             <div className="space-y-1 relative z-10">
               <h3 className="text-4xl font-black text-white leading-none tracking-tighter mb-1">{stat.value}</h3>
-              <p className="text-[10px] font-black text-green-500/60 uppercase tracking-[0.3em] ml-1">{stat.label}</p>
+              <p className="text-[10px] font-black text-green-500/60 uppercase tracking-[0.2em] ml-1 whitespace-nowrap">{stat.label}</p>
             </div>
 
             {/* Micro progress line */}

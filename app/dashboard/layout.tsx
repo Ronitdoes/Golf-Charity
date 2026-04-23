@@ -21,7 +21,7 @@ const NAV_ITEMS = [
 ];
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) redirect('/login');

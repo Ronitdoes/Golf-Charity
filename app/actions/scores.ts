@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 
 export async function getUserScores(userId: string) {
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const { data: scores, error } = await supabase
       .from('scores')
       .select('*')
@@ -27,7 +27,7 @@ export async function getUserScores(userId: string) {
 
 export async function addScore(score: number, playedAt: Date) {
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
     if (authError || !user) {
@@ -87,7 +87,7 @@ export async function addScore(score: number, playedAt: Date) {
 
 export async function deleteScore(scoreId: string) {
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
     if (authError || !user) {
@@ -116,7 +116,7 @@ export async function deleteScore(scoreId: string) {
 
 export async function updateScore(scoreId: string, score: number) {
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
     if (authError || !user) {

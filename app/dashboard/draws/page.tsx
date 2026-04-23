@@ -9,7 +9,7 @@ interface DrawRecord {
 }
 
 export default async function DrawsDashboardPage() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   // Next Draw simulation natively derived relative globally against current execution calendar

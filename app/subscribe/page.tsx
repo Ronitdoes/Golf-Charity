@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import CashfreeCheckout from '@/components/payments/CashfreeCheckout';
 
 export default async function SubscribePage() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   // Route strictly relies upon authentication state

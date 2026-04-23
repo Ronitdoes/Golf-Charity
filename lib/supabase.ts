@@ -2,29 +2,24 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
 // Server Client (only for use in Server Components, Server Actions, or Route Handlers)
-export function createServerSupabaseClient() {
-  const cookieStore = cookies()
+export async function createServerSupabaseClient() {
+  const cookieStore = await cookies()
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(_name: string) {
-          return cookieStore.get(_name)?.value
+        getAll() {
+          return cookieStore.getAll()
         },
-        set(_name: string, _value: string, _options: CookieOptions) {
+        setAll(cookiesToSet) {
           try {
-            cookieStore.set({ name: _name, value: _value, ..._options })
-          } catch (_error) {
-            // The `set` method was called from a Server Component.
-          }
-        },
-        remove(_name: string, _options: CookieOptions) {
-          try {
-            cookieStore.set({ name: _name, value: '', ..._options })
-          } catch (_error) {
-            // The `remove` method was called from a Server Component.
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            )
+          } catch {
+            // The `setAll` method was called from a Server Component.
           }
         },
       },
@@ -33,15 +28,16 @@ export function createServerSupabaseClient() {
 }
 
 // Admin Client (bypass RLS and manage users - Server Side Only)
-export function createAdminSupabaseClient() {
+export async function createAdminSupabaseClient() {
+  const cookieStore = await cookies()
+  
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
       cookies: {
-        get(_name: string) { return undefined },
-        set(_name: string, _value: string, _options: CookieOptions) { },
-        remove(_name: string, _options: CookieOptions) { },
+        getAll() { return cookieStore.getAll() },
+        setAll(cookiesToSet) { },
       },
     }
   )

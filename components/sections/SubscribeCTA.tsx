@@ -99,7 +99,7 @@ export default function SubscribeCTA({ user }: { user?: User | null }) {
 
               {user ? (
                 <CashfreeCheckout 
-                  plan={plan.name === 'Standard' ? 'monthly' : 'yearly'} 
+                  plan={plan.name.toLowerCase() as 'monthly' | 'yearly'} 
                   user={user}
                   buttonText={`Subscribe ${plan.name} Now`}
                   className={`w-full py-5 md:py-6 rounded-2xl font-black text-base md:text-lg tracking-tight transition-all duration-300 hover:scale-[1.05] active:scale-95 flex items-center justify-center gap-3 mt-auto ${

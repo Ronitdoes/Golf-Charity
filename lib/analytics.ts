@@ -7,7 +7,7 @@ import { createServerSupabaseClient } from '@/lib/supabase';
  * Aggregates subscriber counts and revenue estimates.
  */
 export async function getSubscriberStats() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   
   const { data: profiles } = await supabase
     .from('profiles')
@@ -34,7 +34,7 @@ export async function getSubscriberStats() {
  * Aggregates prize distribution history across all cycles.
  */
 export async function getPrizePoolStats() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   
   const { data: draws } = await supabase
     .from('draws')
@@ -55,7 +55,7 @@ export async function getPrizePoolStats() {
  * Aggregates charity impact data per organization.
  */
 export async function getCharityStats() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   
   const { data: charities } = await supabase
     .from('charities')
@@ -92,7 +92,7 @@ export async function getCharityStats() {
  * Aggregates general draw performance and frequency data.
  */
 export async function getDrawStats() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   
   const { data: draws } = await supabase
     .from('draws')

@@ -5,7 +5,7 @@ import { createServerSupabaseClient } from '@/lib/supabase';
 import { revalidatePath } from 'next/cache';
 
 export async function getCharities(featuredOnly = false) {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   let query = supabase.from('charities').select('*').eq('is_active', true).order('name');
   
   // Conditionally isolated query limiting to explicit flag bindings
@@ -20,7 +20,7 @@ export async function getCharities(featuredOnly = false) {
 }
 
 export async function getCharityById(id: string) {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   
   const { data: charity, error } = await supabase
     .from('charities')
@@ -41,7 +41,7 @@ export async function getCharityById(id: string) {
 }
 
 export async function selectCharity(charityId: string) {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   
   if (authError || !user) {
@@ -62,26 +62,3 @@ export async function selectCharity(charityId: string) {
   return { success: true };
 }
 
-export async function updateContributionPercentage(percentage: number) {
-  const supabase = createServerSupabaseClient();
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  
-  if (authError || !user) {
-    return { error: 'Not authenticated natively.' };
-  }
-
-  if (!Number.isInteger(percentage) || percentage < 10 || percentage > 100) {
-    return { error: 'Mathematical boundary compromised. Limits are strictly 10-100.' };
-  }
-
-  const { error } = await supabase
-    .from('profiles')
-    .update({ charity_contribution_percentage: percentage })
-    .eq('id', user.id);
-
-  if (error) return { error: error.message };
-
-  revalidatePath('/dashboard/charity');
-  
-  return { success: true };
-}

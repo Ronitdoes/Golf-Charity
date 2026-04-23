@@ -2,13 +2,11 @@
 
 import { useState } from 'react';
 import { createCashfreeOrder } from '@/app/actions/cashfree';
-import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { load } from '@cashfreepayments/cashfree-js';
 
 export default function CashfreeCheckout({ 
   plan, 
-  user,
   buttonText,
   className
 }: { 
@@ -18,7 +16,6 @@ export default function CashfreeCheckout({
   className?: string
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const handlePayment = async () => {
     setIsLoading(true);

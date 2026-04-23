@@ -11,7 +11,7 @@ import * as THREE from 'three';
 export function GolfBall({ isMobile }: { isMobile: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const entranceX = useRef(-5); // Start off-screen left
-  const texture = useTexture('/golf_texture_chatgpt.png');
+  const texture = useTexture('/icon.webp');
   
   // Track global scroll progress (0 to 1)
   const { scrollYProgress } = useScroll();

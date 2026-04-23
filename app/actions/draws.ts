@@ -10,7 +10,7 @@ import { revalidatePath } from 'next/cache';
  */
 export async function createDraw(monthDate: Date, logicType: 'random' | 'algorithmic') {
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     
     // Normalize date to the first of the month
     const normalizedMonth = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1).toISOString().split('T')[0];
@@ -54,7 +54,7 @@ export async function createDraw(monthDate: Date, logicType: 'random' | 'algorit
  */
 export async function getDraws() {
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const { data, error } = await supabase
       .from('draws')
       .select('*')
@@ -76,7 +76,7 @@ export async function getDraws() {
  */
 export async function getDrawById(id: string) {
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const { data: draw, error } = await supabase
       .from('draws')
       .select('*')

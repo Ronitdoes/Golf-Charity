@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 
 export default function SettingsPage() {

@@ -43,7 +43,7 @@ export default async function CharityProfilePage({ params }: { params: { id: str
   }
 
   // Gracefully determine authentications resolving conditional components independently structurally 
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   return (

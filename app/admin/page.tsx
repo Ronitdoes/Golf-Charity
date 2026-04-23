@@ -2,7 +2,7 @@ import { createServerSupabaseClient } from '@/lib/supabase';
 import AdminDashboardClient from './DashboardView';
 
 export default async function AdminDashboardPage() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
 
   // Parallel data fetching for real-time metrics
   const [

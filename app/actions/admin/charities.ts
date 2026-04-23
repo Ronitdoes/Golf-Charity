@@ -15,7 +15,7 @@ export async function createCharity(formData: {
   is_featured: boolean;
   is_active: boolean;
 }) {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase
     .from('charities')
     .insert(formData)
@@ -40,7 +40,7 @@ export async function updateCharity(id: string, formData: Partial<{
   is_featured: boolean;
   is_active: boolean;
 }>) {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { error } = await supabase
     .from('charities')
     .update(formData)
@@ -59,7 +59,7 @@ export async function updateCharity(id: string, formData: Partial<{
  * Soft-deletion for charities, ensuring no active mapping is compromised.
  */
 export async function deleteCharity(id: string) {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   
   // Check if any users have this charity selected
   const { count } = await supabase
@@ -91,7 +91,7 @@ export async function addCharityEvent(charityId: string, eventData: {
   event_date: string;
   location: string;
 }) {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { error } = await supabase
     .from('charity_events')
     .insert({ ...eventData, charity_id: charityId });
@@ -107,7 +107,7 @@ export async function addCharityEvent(charityId: string, eventData: {
  * Removes an event activation from a charity's agenda.
  */
 export async function deleteCharityEvent(eventId: string, charityId: string) {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { error } = await supabase
     .from('charity_events')
     .delete()
@@ -124,7 +124,7 @@ export async function deleteCharityEvent(eventId: string, charityId: string) {
  * Returns all charities with subscriber counts.
  */
 export async function getAllCharitiesAdmin() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   
   // Aggregate using manual mapping due to count-aware selectivity in profile relations
   const { data: charities } = await supabase

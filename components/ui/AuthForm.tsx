@@ -61,7 +61,7 @@ export default function AuthForm({
           setSuccessMsg(res.success);
         }
         
-        if (res && (res as any).isVerifying) {
+        if (res && (res as { isVerifying?: boolean }).isVerifying) {
           setIsVerifying(true);
         }
       }

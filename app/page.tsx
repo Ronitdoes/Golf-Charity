@@ -1,5 +1,5 @@
 // Homepage with interactive 3D scene and scrollable sections
-import dynamic from 'next/dynamic';
+
 import HeroSection from '@/components/sections/HeroSection';
 import HowItWorks from '@/components/sections/HowItWorks';
 import CharityImpact from '@/components/sections/CharityImpact';
@@ -9,12 +9,10 @@ import { getCharities } from '@/app/actions/charities';
 import { getCharityStats } from '@/lib/analytics';
 import { createServerSupabaseClient } from '@/lib/supabase';
 
-const Scene = dynamic(() => import('@/components/canvas/Scene'), {
-  ssr: false,
-});
+import SceneClient from '@/components/canvas/SceneClient';
 
 export default async function Home() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   const { data: profile } = user ? await supabase
@@ -32,7 +30,7 @@ export default async function Home() {
   return (
     <div className="relative min-h-[500vh] bg-[#070707]">
       {/* Fixed 3D Foundation background */}
-      <Scene />
+      <SceneClient />
 
       {/* Primary Scrollable Content */}
       <main className="relative z-10 w-full flex flex-col items-center">

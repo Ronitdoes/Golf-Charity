@@ -14,20 +14,6 @@ interface StatCardProps {
   };
 }
 
-export function StatCardSkeleton() {
-  return (
-    <div className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-8 h-full animate-pulse space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="h-3 w-20 bg-neutral-800 rounded" />
-        <div className="h-10 w-10 bg-neutral-800 rounded-xl" />
-      </div>
-      <div className="space-y-2">
-        <div className="h-10 w-24 bg-neutral-800 rounded" />
-        <div className="h-3 w-32 bg-neutral-800 rounded" />
-      </div>
-    </div>
-  );
-}
 
 export default function StatCard({ title, value, desc, icon, trend }: StatCardProps) {
   return (

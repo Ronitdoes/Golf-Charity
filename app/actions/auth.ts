@@ -14,7 +14,7 @@ export async function signUp(formData: FormData) {
     return { error: 'Invalid submission parameters' };
   }
 
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
 
   try {
     // 1. Attempt standard registration
@@ -29,31 +29,9 @@ export async function signUp(formData: FormData) {
     });
 
     let data = initialData;
-    let signupError = initialError;
+    const signupError = initialError;
 
-    // 2. High-Fidelity Administrative Fallback: Bypass rate limits in development/testing
-    if (signupError && (signupError.message.includes('rate limit') || signupError.status === 429)) {
-      console.log('[AUTH_SIGNUP_BYPASS] Rate limit hit. Provisioning via Service Role...');
-
-      const supabaseAdmin = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-      );
-
-      const { data: adminData, error: adminError } = await supabaseAdmin.auth.admin.createUser({
-        email,
-        password,
-        email_confirm: false, // Security: Do not auto-confirm even during bypass
-        user_metadata: { full_name: fullName }
-      });
-
-      if (adminError) {
-        console.error('[AUTH_SIGNUP_BYPASS_ERROR]', adminError);
-        return { error: 'Security boundary prevents further registrations.' };
-      }
-
-      data = { user: adminData.user, session: null };
-    } else if (signupError) {
+    if (signupError) {
       console.error('[AUTH_SIGNUP_ERROR]', { message: signupError.message, email });
       return { error: signupError.message };
     }
@@ -91,7 +69,7 @@ export async function verifyEmailOTP(email: string, token: string) {
     return { error: 'Verification code must be at least 8 digits long' };
   }
 
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
 
   try {
     const { data, error } = await supabase.auth.verifyOtp({
@@ -123,45 +101,10 @@ export async function signIn(formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   let isAdmin = false;
 
-  // High-fidelity administrator environment-only bypass logic
-  const isEnvAdminMatch = email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD;
-
   try {
-    // 1. Ensure administrator account exists if environment secrets are matched
-    if (isEnvAdminMatch) {
-      // Using Service Role Client to manage users (Server Side Only)
-      const supabaseAdmin = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-      );
-
-      const { data: users, error: _listError } = await supabaseAdmin.auth.admin.listUsers();
-      const existingAdmin = users?.users.find(u => u.email === email);
-
-      if (!existingAdmin) {
-        // Provision the master administrator at the service level with auto-confirmation
-        const { data: newUser, error: _createError } = await supabaseAdmin.auth.admin.createUser({
-          email,
-          password,
-          email_confirm: true,
-          user_metadata: { full_name: 'System Administrator' }
-        });
-
-        if (!_createError && newUser.user) {
-          // Hard-link physical administrative status to the created profile inherently
-          await supabaseAdmin.from('profiles').upsert({
-            id: newUser.user.id,
-            email: newUser.user.email,
-            full_name: 'System Administrator',
-            is_admin: true,
-            subscription_status: 'active'
-          });
-        }
-      }
-    }
 
     const { data: authData, error } = await supabase.auth.signInWithPassword({
       email,
@@ -191,8 +134,7 @@ export async function signIn(formData: FormData) {
         .eq('id', authData.user.id)
         .single();
 
-      // 2. Combine with environment-only bypass (Master Admin)
-      if (profile?.is_admin || authData.user.email === process.env.ADMIN_EMAIL) {
+      if (profile?.is_admin) {
         isAdmin = true;
       }
     }
@@ -210,7 +152,7 @@ export async function signIn(formData: FormData) {
 
 export async function signOut() {
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     await supabase.auth.signOut();
   } catch (err) {
     console.error('[AUTH_SIGNOUT_ERROR]', err);

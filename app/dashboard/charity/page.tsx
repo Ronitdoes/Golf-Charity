@@ -5,7 +5,7 @@ import CharitySelector from '@/components/charities/CharitySelector';
 import ContributionSlider from '@/components/charities/ContributionSlider';
 
 export default async function CharityDashboardPage() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   const { data: profile } = await supabase
@@ -40,7 +40,7 @@ export default async function CharityDashboardPage() {
      'use server';
      const percentage = Number(formData.get('percentage'));
      if (percentage >= 10 && percentage <= 100) {
-        const supabaseServer = createServerSupabaseClient();
+        const supabaseServer = await createServerSupabaseClient();
         const { data: { user } } = await supabaseServer.auth.getUser();
         await supabaseServer.from('profiles').update({ charity_contribution_percentage: percentage }).eq('id', user!.id);
         revalidatePath('/dashboard/charity');

@@ -4,7 +4,7 @@ import StatCard from '@/components/dashboard/StatCard';
 import Link from 'next/link';
 
 export default async function DashboardOverview() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   // Concurrent data fetching natively retrieving aggregate boundaries safely without RLS leakage
