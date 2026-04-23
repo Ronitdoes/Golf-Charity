@@ -17,7 +17,7 @@
 
 <br />
 
-[![Next.js](https://img.shields.io/badge/Next.js_14-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js_16-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
@@ -44,11 +44,11 @@ digitalhero/
 ├── app/
 │   ├── (auth)/           → Login & Signup flows (Server Components)
 │   ├── admin/            → Admin command center (Panel, Users, Draws, Winners, Analytics, Charities)
-│   ├── api/              → API routes (Razorpay webhooks, draw triggers)
+│   ├── api/              → API routes (Cashfree webhooks, draw triggers)
 │   ├── auth/             → Supabase OAuth callback handler
 │   ├── charities/        → Public charity showcase
 │   ├── dashboard/        → Subscriber player dashboard (Overview, Scores, Charity, Draws, Winnings, Settings)
-│   ├── subscribe/        → Razorpay subscription checkout flow
+│   ├── subscribe/        → Cashfree subscription checkout flow
 │   └── page.tsx          → Public landing page (3D Hero + Marketing Sections)
 │
 ├── components/
@@ -56,7 +56,7 @@ digitalhero/
 │   ├── canvas/           → Three.js / React-Three-Fiber 3D Scene
 │   ├── charities/        → Charity cards & contribution slider
 │   ├── dashboard/        → Dashboard shared UI components
-│   ├── payments/         → Razorpay checkout components
+│   ├── payments/         → Cashfree checkout components
 │   ├── providers/        → Lenis smooth-scroll provider
 │   ├── scores/           → ScoreEntry, ScoreList, ScoreCard
 │   ├── sections/         → Landing page sections (Hero, HowItWorks, CharityImpact, DrawMechanics, CTA)
@@ -75,10 +75,10 @@ digitalhero/
 
 | Layer | Technology | Purpose |
 |---|---|---|
-| **Framework** | Next.js 14 (App Router) | Full-stack SSR & API routes |
+| **Framework** | Next.js 16 (App Router) | Full-stack SSR & API routes |
 | **Language** | TypeScript 5 | End-to-end type safety |
 | **Database** | Supabase (PostgreSQL) | Auth, RLS, Realtime, Edge Functions |
-| **Payments** | Razorpay | Subscription billing & webhook verification |
+| **Payments** | Cashfree | Subscription billing & webhook verification |
 | **3D Engine** | Three.js + React Three Fiber | Immersive interactive hero scene |
 | **Animation** | Framer Motion + GSAP | Page transitions, scroll orchestration |
 | **Scroll** | Lenis (`@studio-freight/lenis`) | High-fidelity native smooth scrolling |
@@ -169,7 +169,7 @@ Winners upload proof of identity directly through the platform. Admins verify an
 ### Prerequisites
 - Node.js `>=18`
 - A [Supabase](https://supabase.com/) project
-- A [Razorpay](https://razorpay.com/) account
+- A [Cashfree](https://www.cashfree.com/) account
 
 ### 1. Clone & Install
 
@@ -192,9 +192,10 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-RAZORPAY_KEY_ID=your_razorpay_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_key_secret
-RAZORPAY_WEBHOOK_SECRET=your_webhook_secret
+CASHFREE_APP_ID=your_cashfree_app_id
+CASHFREE_SECRET_KEY=your_cashfree_secret_key
+CASHFREE_ENVIRONMENT=SANDBOX
+CASHFREE_WEBHOOK_SECRET=your_cashfree_webhook_secret
 
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
@@ -239,7 +240,7 @@ npm run build
 npm run start
 ```
 
-> **Note:** Ensure Razorpay webhook events are configured to point to your production URL at `/api/webhooks/razorpay`.
+> **Note:** Ensure Cashfree webhook events are configured to point to your production URL at `/api/webhooks/cashfree`.
 
 ---
 
