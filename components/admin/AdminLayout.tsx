@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from '@/app/actions/auth';
 import { useTransition, useState } from 'react';
 import { motion } from 'framer-motion';
+import Loading from '@/app/loading';
 
 const NAV_ITEMS = [
   { label: 'Panel', href: '/admin', icon: 'M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z' },
@@ -31,6 +32,9 @@ export default function AdminLayout({ children, adminName }: { children: React.R
 
   return (
     <div className="flex min-h-screen bg-[#060606] selection:bg-green-500/30 selection:text-green-200 overflow-x-hidden">
+      {/* Loading Overlay during Logout */}
+      {isPending && <Loading />}
+
       {/* Background Decorative Elements */}
       <div className="fixed inset-0 opacity-[0.02] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat z-0" />
       <div className="fixed top-[-10%] left-[-5%] w-[35%] h-[35%] bg-green-500/10 rounded-full blur-[100px] pointer-events-none z-0" />

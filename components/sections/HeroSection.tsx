@@ -7,12 +7,21 @@ import { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/dist/ScrollToPlugin';
 import { signOut } from '@/app/actions/auth';
+import { useTransition } from 'react';
+import Loading from '@/app/loading';
 
 interface UserMeta { id?: string; email?: string }
 
 export default function HeroSection({ user, isAdmin, isSubscriptionActive }: { user?: UserMeta | null, isAdmin?: boolean, isSubscriptionActive?: boolean }) {
   const words = "Subscribe. Play. Give.".split(" ");
   const shouldReduceMotion = useReducedMotion();
+  const [isPending, startTransition] = useTransition();
+
+  const handleLogout = () => {
+    startTransition(async () => {
+      await signOut();
+    });
+  };
 
   useEffect(() => {
     gsap.registerPlugin(ScrollToPlugin);
@@ -40,6 +49,9 @@ export default function HeroSection({ user, isAdmin, isSubscriptionActive }: { u
 
   return (
     <section className="relative min-h-screen w-full flex flex-col items-center justify-center px-6 overflow-hidden">
+      {/* Loading Overlay */}
+      {isPending && <Loading />}
+
       {/* Top Navigation */}
       <motion.nav 
         initial={{ opacity: 0, y: -20 }}
@@ -74,14 +86,13 @@ export default function HeroSection({ user, isAdmin, isSubscriptionActive }: { u
                </button>
             )}
 
-            <form action={signOut}>
-               <button 
-                  type="submit"
-                  className="px-6 md:px-8 py-3 bg-white/[0.03] hover:bg-white/[0.08] text-white font-black text-[10px] md:text-xs tracking-[0.3em] uppercase rounded-full border border-white/10 backdrop-blur-2xl transition-all hover:scale-105 active:scale-95 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]"
-               >
-                  Sign Out
-               </button>
-            </form>
+            <button 
+               onClick={handleLogout}
+               disabled={isPending}
+               className="px-6 md:px-8 py-3 bg-white/[0.03] hover:bg-white/[0.08] text-white font-black text-[10px] md:text-xs tracking-[0.3em] uppercase rounded-full border border-white/10 backdrop-blur-2xl transition-all hover:scale-105 active:scale-95 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] disabled:opacity-50"
+            >
+               {isPending ? 'Signing Out...' : 'Sign Out'}
+            </button>
           </div>
         ) : (
           <div className="flex items-center gap-6 md:gap-8">

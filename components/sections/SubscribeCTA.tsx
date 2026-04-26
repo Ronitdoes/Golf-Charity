@@ -163,7 +163,7 @@ export default function SubscribeCTA({ user, isSubscriptionActive }: { user?: Us
           viewport={{ once: true }}
           className="text-neutral-600 text-[10px] md:text-sm font-medium"
         >
-          {user ? 'Logged in as ' + user.email : (
+          {!user && (
             <>Already a member? <Link href="/login" className="text-white hover:text-green-500 underline underline-offset-4 decoration-neutral-800 transition-colors">Sign in to your dashboard</Link></>
           )}
         </motion.p>

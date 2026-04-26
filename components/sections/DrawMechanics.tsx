@@ -59,7 +59,7 @@ export default function DrawMechanics() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1 }}
           viewport={{ once: true }}
-          className="w-full bg-neutral-900/40 rounded-[2.5rem] border border-white/5 backdrop-blur-md overflow-hidden"
+          className="w-full bg-white/[0.03] rounded-[2.5rem] border border-white/10 backdrop-blur-2xl overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]"
         >
           <div className="p-8 md:p-12 space-y-8">
             <h3 className="text-white font-bold text-xl md:text-2xl tracking-tight">Prize Pool Distribution</h3>
